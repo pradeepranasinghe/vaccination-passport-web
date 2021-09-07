@@ -1,0 +1,10 @@
+.loglink .logo :hover {
+ fill:darkblue;
+ 
+  }
+
+/* @media (max-width: 400px) {
+    .loglink .logo{
+        display:none;
+}
+} */
