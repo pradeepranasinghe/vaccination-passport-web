@@ -3,6 +3,7 @@ import axios from 'axios';
 import { handleResponse, handleError } from './response'
 import { Table, Form, Container, Card, Button, Alert } from 'react-bootstrap'
 import './landingPage.css';
+import { Link } from "react-router-dom";
 
 function ClaimHolder() {
 
@@ -70,6 +71,8 @@ function ClaimHolder() {
               <h2 className="text-center mb-4">Passport Holder's Wallet</h2>
               <h4 className="text-center mb-4">Self-sovereign identitiy (SSI)</h4>
               <Container className="invite-form">
+              <p>See Passports in the Wallet <Link to="/claims">here</Link></p>
+              <h6>Establish a secure connection with an Agent</h6>
               <div>
                 <p>Receiving a secure connection invitation from an Agent via Email or Text</p>
                 <ul>
@@ -101,7 +104,8 @@ function ClaimHolder() {
                       <tr>
                         <td>{conn.connection_id}</td>
                         <td>{conn.their_label}</td>
-                        <td>{conn.rfc23_state}</td>                        
+                        <td>{conn.rfc23_state}</td>  
+                        <td></td>                      
                       </tr>
 
                     )) : ''}

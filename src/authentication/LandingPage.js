@@ -112,7 +112,7 @@ function LandingPage() {
                     </Form.Group>
                   </Form>
                   <div>
-                    <p>Copy this response details with the client via Email or Text</p>
+                    <p>Copy this response and sent it to the client via Email or Text</p>
 
                     <li>Click <b>Accpet</b> button from the table to establish a secure connection with the Client</li>
 

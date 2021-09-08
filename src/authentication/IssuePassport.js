@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import axios from 'axios';
 import { handleResponse, handleError } from './response'
-import { Table, Form, Container, Card, Button, Alert } from 'react-bootstrap'
+import { Spinner, Form, Container, Card, Button, Alert } from 'react-bootstrap'
 import './landingPage.css';
 
 const IssuePassport = (props) => {
@@ -11,22 +11,19 @@ const IssuePassport = (props) => {
   const [connections, setConnections] = useState();
   const connectionIdRef = useRef()
   const clientReferenceRef = useRef()
+  const commentsRef = useRef()
   const clientFullNameRef = useRef()
-  const ppIssueDate = useRef()
-  const ppVaccinationType = useRef()
-  const clientAge = useRef()
+  const ppIssueDateRef = useRef()
+  const ppVaccinationTypeRef = useRef()
+  const clientAgeRef = useRef()
   const [refresh, setRefresh] = useState('');
   const [message, setMessage] = useState();
   const [error, setError] = useState()
-
+  const [loading, setLoading] = useState(false)
+  
 
   //http://localhost:8021/connections?alias=Hello Alice 2
   useEffect(() => {
-    getAll().then((res) => {
-      setConnections(res.results);
-      console.log('data', res);
-    })
-
     connectionIdRef.current.value = connectionData.connection_id;
     clientReferenceRef.current.value = connectionData.alias;
 
@@ -51,30 +48,71 @@ const IssuePassport = (props) => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    // postCreateInvitation(invitationRef.current.value).then((invite) => {
+    
+    const attributes = [
+      {
+        "name": "name",
+        "value": clientFullNameRef.current.value
+      },
+      {
+        "name": "timestamp",
+        "value": "1234567890"
+      },
+      {
+        "name": "date",
+        "value": ppIssueDateRef.current.value
+      },
+      {
+        "name": "degree",
+        "value": ppVaccinationTypeRef.current.value
+      },
+      {
+        "name": "age",
+        "value": clientAgeRef.current.value
+      }
 
-    //   connectionRef.current.value = JSON.stringify(invite.invitation);
-    //   setRefresh({ ...1 })
-    // })
+    ]
+
+    passportPayload.credential_preview.attributes = attributes;
+    passportPayload.connection_id = connectionData.connection_id;
+
+    issueCredential(passportPayload);
 
   }
 
-  const acceptRequest = (connection_id) => {
+  const issueCredential = (passportPayload) => {
+    setLoading(true);
     return axios
-      .post(`http://localhost:8021/connections/${connection_id}/accept-request`)
-      .then(handleResponse)
-      .catch(handleError);
+      .post(`http://localhost:8021/issue-credential-2.0/send`,passportPayload)
+      .then((res)=>{
+        setMessage('Vaccination Passport has been issued successfully!')
+        setLoading(false);
+      })
+      .catch((e)=>{
+        setError('Error'+e);
+        setLoading(false);
+      });
   };
 
 
-  function handleAcceptRequest(connection_id) {
-    acceptRequest(connection_id).then((res2) => {
-      setMessage('Client Request Accepted Successfully!')
-    });
-    //setRefresh({...1})
-  }
-
-
+  const passportPayload = {
+    "auto_remove": true,
+    "comment": "test",
+    "credential_preview": {
+      "@type": "issue-credential/2.0/credential-preview",
+    },
+    "filter": {
+      "indy": {
+        "cred_def_id": "5GtAQvru5EM1uoh1fvBkfz:3:CL:94455:faber.agent.degree_schema",
+        "issuer_did": "5GtAQvru5EM1uoh1fvBkfz",
+        "schema_id": "5GtAQvru5EM1uoh1fvBkfz:2:degree schema:91.88.15",
+        "schema_issuer_did": "5GtAQvru5EM1uoh1fvBkfz",
+        "schema_name": "degree schema",
+        "schema_version": "91.88.15"
+      }
+    },
+    "trace": false
+  };
 
   return (
     <>
@@ -86,6 +124,9 @@ const IssuePassport = (props) => {
               <h4 className="text-center mb-4"></h4>
               {error && <Alert variant="danger">{error}</Alert>}
               {message && <Alert variant="success">{message}</Alert>}
+              {loading &&<Spinner animation="border" role="status">
+                    <span className="sr-only">Writing to public ledger ...</span>
+                </Spinner>}
               <Container className="invite-form">
                 <Form onSubmit={handleSubmit}>
                   <Form.Group id="connectionId">
@@ -96,21 +137,25 @@ const IssuePassport = (props) => {
                     <Form.Label>Client Reference</Form.Label>
                     <Form.Control type="text" ref={clientReferenceRef} required></Form.Control>
                   </Form.Group>
+                  <Form.Group id="clientMessage">
+                    <Form.Label>Comments</Form.Label>
+                    <Form.Control type="text" ref={commentsRef}></Form.Control>
+                  </Form.Group>
                   <Form.Group id="fullName">
                     <Form.Label>Client Full Name</Form.Label>
                     <Form.Control type="text" ref={clientFullNameRef} required></Form.Control>
                   </Form.Group>
                   <Form.Group id="age">
                     <Form.Label>Client Age</Form.Label>
-                    <Form.Control type="text" ref={clientAge} required></Form.Control>
+                    <Form.Control type="text" ref={clientAgeRef} required></Form.Control>
                   </Form.Group>
                   <Form.Group id="vaccType">
                     <Form.Label>Type of Vaccination</Form.Label>
-                    <Form.Control type="text" ref={ppVaccinationType} required></Form.Control>
+                    <Form.Control type="text" ref={ppVaccinationTypeRef} required></Form.Control>
                   </Form.Group>
                   <Form.Group id="issueDate">
                     <Form.Label>Date Passport Issued</Form.Label>
-                    <Form.Control type="text" ref={ppIssueDate} required></Form.Control>
+                    <Form.Control type="text" ref={ppIssueDateRef} required></Form.Control>
                   </Form.Group>
                   <Button variant="primary" type="submit">Issue Passport</Button>
                 </Form>

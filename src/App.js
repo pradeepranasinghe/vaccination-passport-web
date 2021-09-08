@@ -8,6 +8,7 @@ import LandingPage from "./authentication/LandingPage";
 import ClaimHolder from "./authentication/ClaimHolder";
 import Help from "./authentication/Help";
 import IssuePassport from "./authentication/IssuePassport";
+import ClaimHolderRecords from "./authentication/ClaimHolderRecords";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/claimholder" component={ClaimHolder} />
             <Route exact path="/login" component={Login} />
             <Route path="/help" component={Help} />
+            <Route path="/claims" component={ClaimHolderRecords} />
 
           </Switch>
 
