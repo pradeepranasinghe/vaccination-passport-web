@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
 import axios from 'axios';
 import { handleResponse, handleError } from './response'
-import { Table, Form, Container, Card, Button, Alert } from 'react-bootstrap'
+import { Table, Form, Container, Card, Button, Alert, Tabs, Tab } from 'react-bootstrap'
 import './landingPage.css';
 import { Link, useHistory } from "react-router-dom"
+import CredentialList from './CredentialList'
+import ProofRequestList from './ProofRequestList'
 
 function LandingPage() {
 
@@ -14,6 +16,8 @@ function LandingPage() {
   const [refresh, setRefresh] = useState('');
   const [message, setMessage] = useState();
   const [error, setError] = useState()
+  const [key, setKey] = useState('home');
+  const [connection, setConnection] = useState();
 
 
   //http://localhost:8021/connections?alias=Hello Alice 2
@@ -34,6 +38,8 @@ function LandingPage() {
       pathname: '/issue',
       state: connection
     });
+    //setKey('issue');
+    //setConnection(connection);
   }
 
 
@@ -72,12 +78,11 @@ function LandingPage() {
       .catch(handleError);
   };
 
-
   function handleAcceptRequest(connection_id) {
     acceptRequest(connection_id).then((res2) => {
       setMessage('Client Request Accepted Successfully!')
     });
-    //setRefresh({...1})
+    setRefresh({...1})
   }
 
 
@@ -91,12 +96,19 @@ function LandingPage() {
               <h2 className="text-center mb-4">Vaccination Passport Issuer</h2>
               <h4 className="text-center mb-4">Agent's private blockchain wallet</h4>
               <Container className="invite-form">
-                <ol>
+
+                <Tabs id="controlled-tab"
+      activeKey={key}
+      onSelect={(k) => setKey(k)} defaultActiveKey="home" id="uncontrolled-tab-example" className="mb-3">
+                  
+                  <Tab eventKey="home" title="Connect">
+                  <ol>
                   <div>
                     <h4>Passport issuer steps</h4>
 
                     <li>Send an invitation to the Client to establish a secure connection before issuing the passport. Eg: via Email</li>
                     <span className="spacer"></span>
+                    {/* <button onClick={()=>{setKey('issue');}}>test</button> */}
                   </div>
 
                   <Form onSubmit={handleSubmit}>
@@ -118,8 +130,7 @@ function LandingPage() {
 
                   </div>
                 </ol>
-              </Container>
-              {error && <Alert variant="danger">{error}</Alert>}
+                {error && <Alert variant="danger">{error}</Alert>}
               {message && <Alert variant="success">{message}</Alert>}
               <Table striped bordered hover>
                 <thead>
@@ -140,16 +151,28 @@ function LandingPage() {
                         <td>{conn.their_label}</td>
                         <td>{conn.rfc23_state}</td>
                         <td>{
-                        (conn.rfc23_state && conn.rfc23_state == 'request-received') && 
-                        <Button variant="primary" onClick={() => { handleAcceptRequest(conn.connection_id) }} type="button">Accpet</Button>}
-                        {(conn.rfc23_state && conn.rfc23_state == 'response-sent') && 
-                        <Button variant="primary" onClick={() => { handleClickIssue(conn) }} type="button">Issue</Button>}
-                      </td>
+                          (conn.rfc23_state && conn.rfc23_state == 'request-received') &&
+                          <Button variant="primary" onClick={() => { handleAcceptRequest(conn.connection_id) }} type="button">Accpet</Button>}
+                          {(conn.rfc23_state && conn.rfc23_state == 'completed') &&
+                            <Button variant="primary" onClick={() => { handleClickIssue(conn) }} type="button">Issue</Button>}
+                        </td>
                       </tr>
 
                     )) : ''}
                 </tbody>
               </Table>
+                  </Tab>
+                  <Tab eventKey="issue" title="Issued Passports">
+                      <CredentialList/>
+                  </Tab>
+                  <Tab eventKey="proofs" title="Issued Proof Requests">
+                      <ProofRequestList/>
+                  </Tab>
+                  
+                </Tabs>
+                
+              </Container>
+              
 
             </Card.Body>
           </Card>

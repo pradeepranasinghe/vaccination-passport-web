@@ -5,7 +5,7 @@ import { Spinner, Form, Container, Card, Button, Alert } from 'react-bootstrap'
 import './landingPage.css';
 
 const IssuePassport = (props) => {
-  const connectionData = props.location.state || {};
+  const connectionData = props.location && props.location.state || {};
 
 
   const [connections, setConnections] = useState();
@@ -120,7 +120,7 @@ const IssuePassport = (props) => {
         <div className="w-100" style={{ maxWidth: "100%" }}>
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">Issue Passport</h2>
+              <h2 className="text-center mb-4">Issue a Passport</h2>
               <h4 className="text-center mb-4"></h4>
               {error && <Alert variant="danger">{error}</Alert>}
               {message && <Alert variant="success">{message}</Alert>}
