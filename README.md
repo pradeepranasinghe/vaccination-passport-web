@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Blockchain based Vaccination Passport using Self-sovereign identity with Hyperledger technology 
+
+Generally, Health records are kept in disparate but centralised database systems. These systems are vulnerable to data theft, cyber-attacks, fraud, blackmailing, and many other privacy issues. In addition to that, users of these systems need to maintain multiple user accounts and they don’t have any control over their data stored in these systems. In this paper, we will evaluate the usability of blockchain technologies for vendor-neutral decentralised identity management, access controls, and costs effective platforms to build a portable, user-centred tamper-proof vaccination passport that can be accessed from anywhere in the world.
+
+## This is a Web Application Artefact developed to orchestrate Passport Issuer, Holder, and Verifier credential exchange scenarios
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

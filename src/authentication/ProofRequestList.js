@@ -6,7 +6,7 @@ import './landingPage.css';
 import { Link } from "react-router-dom";
 import RowRederer from './RowRederer'
 
-function ProofRequestList() {
+function ProofRequestList(isIssuer) {
 
 
     const [connections, setConnections] = useState();
@@ -20,73 +20,19 @@ function ProofRequestList() {
     useEffect(() => {
         getAll().then((res) => {
             setConnections(res.results);
-            console.log('data', res);
         })
 
     }, [refresh]);
 
 
-    const getAll = (resource) => {
+    const getAll = () => {
+        let port = isIssuer.isIssuer == true ? '8021':'8041';
+        
         return axios
-            .get(`http://localhost:8021/present-proof-2.0/records`)
+            .get(`http://localhost:${port}/present-proof-2.0/records`)
             .then(handleResponse)
             .catch(handleError);
     };
-
-    
-
-    const getVerificationStatus = (res) => {
-        let pres_ex_id = res.data.pres_ex_id;
-        // return axios
-        //     .get(`http://localhost:8021/present-proof-2.0/records/${pres_ex_id}`)
-        //     .then(handleResponse)
-        //     .catch(handleError);
-
-        //http://localhost:8021/present-proof-2.0/records
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-            // Typical action to be performed when the document is ready:
-                console.log('what s',JSON.parse(xhttp.responseText))
-            }
-
-        };
-        xhttp.open("GET", `http://localhost:8021/present-proof-2.0/records/${pres_ex_id}`, true);
-        xhttp.send();
-    }
-
-
-    // const handlePresentProof =  (conn) => {
-
-
-    //     setLoading(true)
-    //     let ppr =  getPresentProofRequest(conn);
-    //     console.log(ppr);
-    //     return axios
-    //         .post(`http://localhost:8021/present-proof-2.0/send-request`, ppr)
-    //         .then((res) => {
-    //             setMessage('Request for Proof sent successfully!')
-    //             setLoading(false);
-    //             getVerificationStatus(res).then((res)=>{
-    //                 console.log('Present proof response11', res);
-    //                 setVerificationStatus(res);
-    //             })
-                
-    //         })
-    //         .catch((e) => {
-    //             setError('Error' + e);
-    //             setLoading(false);
-    //         });
-    // };
-
-    const getDisplayString = (items)=>{
-        let temp='';
-        items.map((item)=>{
-            temp += `<p>${(item.name||'')}  ${item.value}</p>`;
-        })
-        return temp;
-    }
 
 
     return (
@@ -106,6 +52,8 @@ function ProofRequestList() {
                         <th>Connection ID</th>
                         {/* <th className="column-width">cred_def_id</th> */}
                         <th>Comment</th>
+                        <th>Proof Presentation ID</th>
+                        
                         <th>Status</th>
                         <th>Proof verified</th>
                         <th>Action</th>
@@ -119,6 +67,7 @@ function ProofRequestList() {
                                 {/* <td className="column-width">{conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id}</td> */}
                                 {/* <td><RowRederer items={conn.cred_ex_record.cred_offer.credential_preview.attributes}/></td> */}
                                 <td>{conn.pres_request.comment}</td>
+                                <td>{conn.pres_ex_id}</td>
                                 <td>{conn.state}</td>
                                 <td>{conn.verified}</td>
                                 <td></td>
@@ -127,7 +76,10 @@ function ProofRequestList() {
                         )) : ''}
                 </tbody>
             </Table>
+<p>TODO: http://localhost:8041/present-proof-2.0/records/3c148235-413d-439b-a70f-10ffa7da2830/verify-presentation
 
+    Proof verification with multiple credentials in holder's wallet.
+</p>
         </>
 
     )

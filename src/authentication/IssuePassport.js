@@ -49,27 +49,37 @@ const IssuePassport = (props) => {
   async function handleSubmit(e) {
     e.preventDefault();
     
+    //400: Preview attributes {'validuntil', 'middlename', 'validfrom', 'firstname', 'dateofbirth', 'vaccinations', 'lastname'} mismatch corresponding schema attributes 
+    //{'firtname', 'validuntil', 'middlename', 'validfrom', 'dateofbirth', 'vaccinations', 'lastname'}.
     const attributes = [
       {
-        "name": "name",
-        "value": clientFullNameRef.current.value
+        "name": "firtname",
+        "value": 'First Name'
       },
       {
-        "name": "timestamp",
-        "value": "1234567890"
+        "name": "validuntil",
+        "value": 'Laast Name'
       },
       {
-        "name": "date",
+        "name": "middlename",
+        "value": 'Middle Name'
+      },
+      {
+        "name": "validfrom",
+        "value": 'Laast Name'
+      },
+      {
+        "name": "dateofbirth",
+        "value": clientAgeRef.current.value
+      },
+      {
+        "name": "vaccinations",
         "value": ppIssueDateRef.current.value
       },
       {
-        "name": "degree",
+        "name": "lastname",
         "value": ppVaccinationTypeRef.current.value
       },
-      {
-        "name": "age",
-        "value": clientAgeRef.current.value
-      }
 
     ]
 
@@ -103,12 +113,12 @@ const IssuePassport = (props) => {
     },
     "filter": {
       "indy": {
-        "cred_def_id": "5GtAQvru5EM1uoh1fvBkfz:3:CL:94455:faber.agent.degree_schema",
-        "issuer_did": "5GtAQvru5EM1uoh1fvBkfz",
-        "schema_id": "5GtAQvru5EM1uoh1fvBkfz:2:degree schema:91.88.15",
-        "schema_issuer_did": "5GtAQvru5EM1uoh1fvBkfz",
-        "schema_name": "degree schema",
-        "schema_version": "91.88.15"
+        "cred_def_id": "87AyScWhdSCvWFYBGGq2Xb:3:CL:96490:issuer.vacc.schema",
+        "issuer_did": "87AyScWhdSCvWFYBGGq2Xb",
+        "schema_id": "87AyScWhdSCvWFYBGGq2Xb:2:vacc-pass-t1:0.1",
+        "schema_issuer_did": "87AyScWhdSCvWFYBGGq2Xb",
+        "schema_name": "vacc-pass-t1",
+        "schema_version": "0.1"
       }
     },
     "trace": false

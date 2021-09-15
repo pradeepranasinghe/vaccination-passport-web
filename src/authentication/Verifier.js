@@ -6,9 +6,8 @@ import './landingPage.css';
 import { Link, useHistory } from "react-router-dom"
 import CredentialList from './CredentialList'
 import ProofRequestList from './ProofRequestList'
-import PublicData from './PublicData'
 
-function LandingPage() {
+function Verifier() {
 
 
   const [connections, setConnections] = useState();
@@ -36,7 +35,7 @@ function LandingPage() {
 
   const handleClickIssue = (connection) => {
     history.push({
-      pathname: '/issue',
+      pathname: '/proof',
       state: connection
     });
     //setKey('issue');
@@ -46,14 +45,14 @@ function LandingPage() {
 
   const getAll = (resource) => {
     return axios
-      .get(`http://localhost:8021/connections`)
+      .get(`http://localhost:8041/connections`)
       .then(handleResponse)
       .catch(handleError);
   };
 
   const postCreateInvitation = (message) => {
     return axios
-      .post(`http://localhost:8021/connections/create-invitation?alias=${message}&auto_accept=false&multi_use=false&public=false`)
+      .post(`http://localhost:8041/connections/create-invitation?alias=${message}&auto_accept=false&multi_use=false&public=false`)
       .then(handleResponse)
       .catch(handleError);
   };
@@ -74,7 +73,7 @@ function LandingPage() {
 
   const acceptRequest = (connection_id) => {
     return axios
-      .post(`http://localhost:8021/connections/${connection_id}/accept-request`)
+      .post(`http://localhost:8041/connections/${connection_id}/accept-request`)
       .then(handleResponse)
       .catch(handleError);
   };
@@ -94,8 +93,8 @@ function LandingPage() {
         <div className="w-100" style={{ maxWidth: "100%" }}>
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">Vaccination Passport Issuer</h2>
-              <h4 className="text-center mb-4">Agent's private blockchain wallet</h4>
+              <h2 className="text-center mb-4">Vaccination Passport Verifier</h2>
+              <h4 className="text-center mb-4"></h4>
               <Container className="invite-form">
 
                 <Tabs id="controlled-tab"
@@ -155,7 +154,7 @@ function LandingPage() {
                           (conn.rfc23_state && conn.rfc23_state == 'request-received') &&
                           <Button variant="primary" onClick={() => { handleAcceptRequest(conn.connection_id) }} type="button">Accpet</Button>}
                           {(conn.rfc23_state && conn.rfc23_state == 'completed') &&
-                            <Button variant="primary" onClick={() => { handleClickIssue(conn) }} type="button">Issue</Button>}
+                            <Button variant="primary" onClick={() => { handleClickIssue(conn) }} type="button">Request Proof</Button>}
                         </td>
                       </tr>
 
@@ -163,15 +162,10 @@ function LandingPage() {
                 </tbody>
               </Table>
                   </Tab>
-                  <Tab eventKey="issue" title="Issued Passports">
-                      <CredentialList/>
-                  </Tab>
                   <Tab eventKey="proofs" title="Issued Proof Requests">
-                      <ProofRequestList isIssuer={true}/>
+                      <ProofRequestList isIssuer={false}/>
                   </Tab>
-                  <Tab eventKey="creddef" title="Public Data">
-                      <PublicData/>
-                  </Tab>
+                  
                 </Tabs>
                 
               </Container>
@@ -186,4 +180,4 @@ function LandingPage() {
   )
 }
 
-export default LandingPage;
+export default Verifier;

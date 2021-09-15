@@ -35,6 +35,8 @@ function CredentialList() {
 
     const getPresentProofRequest =  (conn) => {
 
+        console.log('conn.cred_ex_record....',conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id);
+
         return {
             "comment": getDisplayString2(conn.cred_ex_record.cred_offer.credential_preview.attributes),
             "connection_id": conn.cred_ex_record.connection_id,

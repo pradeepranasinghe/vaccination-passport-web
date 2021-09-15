@@ -18,6 +18,8 @@ export default function Login() {
             history.push("/landing")
         if(emailRef.current.value.startsWith('hol'))
             history.push("/claimholder")
+        if(emailRef.current.value.startsWith('ver'))
+        history.push("/verify")
 
         setLoading(false)
     }
