@@ -15,11 +15,21 @@ const IssuePassport = (props) => {
   const clientFullNameRef = useRef()
   const ppIssueDateRef = useRef()
   const ppVaccinationTypeRef = useRef()
+  const ppvalidFromRef = useRef()
+  const ppvalidUntilRef = useRef()
+  const ppFirstNameRef = useRef()
+  const ppMiddleNameRef = useRef()
+  const ppLastNameRef = useRef()
+  const ppAgeRef = useRef()
+  const ppVaccinationsRef = useRef()
+
   const clientAgeRef = useRef()
   const [refresh, setRefresh] = useState('');
   const [message, setMessage] = useState();
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
+  const ISSUER_PUBLIC_DID = 'RcJY6pShAK5YwZJ55V1cGY';
+  const SCHEMA_SEQ_NO =  "98979";
   
 
   //http://localhost:8021/connections?alias=Hello Alice 2
@@ -47,44 +57,45 @@ const IssuePassport = (props) => {
 
 
   async function handleSubmit(e) {
+
     e.preventDefault();
     
-    //400: Preview attributes {'validuntil', 'middlename', 'validfrom', 'firstname', 'dateofbirth', 'vaccinations', 'lastname'} mismatch corresponding schema attributes 
-    //{'firtname', 'validuntil', 'middlename', 'validfrom', 'dateofbirth', 'vaccinations', 'lastname'}.
+
     const attributes = [
       {
-        "name": "firtname",
-        "value": 'First Name'
+        "name": "middlename",
+        "value": ppMiddleNameRef.current.value
       },
       {
         "name": "validuntil",
-        "value": 'Laast Name'
+         "value": ppvalidUntilRef.current.value
       },
       {
-        "name": "middlename",
-        "value": 'Middle Name'
+        "name": "age",
+        "value": ppAgeRef.current.value
       },
       {
-        "name": "validfrom",
-        "value": 'Laast Name'
-      },
-      {
-        "name": "dateofbirth",
-        "value": clientAgeRef.current.value
+        "name": "firstname",
+        "value": ppFirstNameRef.current.value
       },
       {
         "name": "vaccinations",
-        "value": ppIssueDateRef.current.value
+        "value": ppVaccinationsRef.current.value
+      },
+      {
+        "name": "validfrom",
+        "value": ppvalidFromRef.current.value
       },
       {
         "name": "lastname",
-        "value": ppVaccinationTypeRef.current.value
+        "value": ppLastNameRef.current.value
       },
 
     ]
 
     passportPayload.credential_preview.attributes = attributes;
     passportPayload.connection_id = connectionData.connection_id;
+    passportPayload.comment = commentsRef.current.value
 
     issueCredential(passportPayload);
 
@@ -104,7 +115,6 @@ const IssuePassport = (props) => {
       });
   };
 
-
   const passportPayload = {
     "auto_remove": true,
     "comment": "test",
@@ -113,12 +123,12 @@ const IssuePassport = (props) => {
     },
     "filter": {
       "indy": {
-        "cred_def_id": "87AyScWhdSCvWFYBGGq2Xb:3:CL:96490:issuer.vacc.schema",
-        "issuer_did": "87AyScWhdSCvWFYBGGq2Xb",
-        "schema_id": "87AyScWhdSCvWFYBGGq2Xb:2:vacc-pass-t1:0.1",
-        "schema_issuer_did": "87AyScWhdSCvWFYBGGq2Xb",
-        "schema_name": "vacc-pass-t1",
-        "schema_version": "0.1"
+        "cred_def_id": `${ISSUER_PUBLIC_DID}:3:CL:${SCHEMA_SEQ_NO}:issuer.vacc.schema2`,
+        "issuer_did": ISSUER_PUBLIC_DID,
+        "schema_id": `${ISSUER_PUBLIC_DID}:2:vacc-pass-t2:0.0.2`,
+        "schema_issuer_did": ISSUER_PUBLIC_DID,
+        "schema_name": "vacc-pass-t2",
+        "schema_version": "0.0.2"
       }
     },
     "trace": false
@@ -149,25 +159,37 @@ const IssuePassport = (props) => {
                   </Form.Group>
                   <Form.Group id="clientMessage">
                     <Form.Label>Comments</Form.Label>
-                    <Form.Control type="text" ref={commentsRef}></Form.Control>
+                    <Form.Control type="text" ref={commentsRef} required></Form.Control>
                   </Form.Group>
-                  <Form.Group id="fullName">
-                    <Form.Label>Client Full Name</Form.Label>
-                    <Form.Control type="text" ref={clientFullNameRef} required></Form.Control>
+                  <Form.Group id="firtName">
+                    <Form.Label>Client First Name</Form.Label>
+                    <Form.Control type="text" ref={ppFirstNameRef} required></Form.Control>
                   </Form.Group>
-                  <Form.Group id="age">
+                  <Form.Group id="middleName">
+                    <Form.Label>Client Middle Name</Form.Label>
+                    <Form.Control type="text" ref={ppMiddleNameRef}></Form.Control>
+                  </Form.Group>
+                  <Form.Group id="lastName">
+                    <Form.Label>Client Last Name</Form.Label>
+                    <Form.Control type="text" ref={ppLastNameRef} required></Form.Control>
+                  </Form.Group>
+                  <Form.Group id="dob">
                     <Form.Label>Client Age</Form.Label>
-                    <Form.Control type="text" ref={clientAgeRef} required></Form.Control>
+                    <Form.Control type="text" ref={ppAgeRef} required></Form.Control>
                   </Form.Group>
-                  <Form.Group id="vaccType">
-                    <Form.Label>Type of Vaccination</Form.Label>
-                    <Form.Control type="text" ref={ppVaccinationTypeRef} required></Form.Control>
+                  <Form.Group id="vaccinations">
+                    <Form.Label>Vaccinations</Form.Label>
+                    <Form.Control type="text" ref={ppVaccinationsRef} required></Form.Control>
                   </Form.Group>
-                  <Form.Group id="issueDate">
-                    <Form.Label>Date Passport Issued</Form.Label>
-                    <Form.Control type="text" ref={ppIssueDateRef} required></Form.Control>
+                  <Form.Group id="validFrom">
+                    <Form.Label>Vaccination Date format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS.</Form.Label>
+                    <Form.Control type="text" ref={ppvalidFromRef} required></Form.Control>
                   </Form.Group>
-                  <Button variant="primary" type="submit">Issue Passport</Button>
+                  <Form.Group id="validUntil">
+                    <Form.Label>Vaccination Valid Until format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS.</Form.Label>
+                    <Form.Control type="text" ref={ppvalidUntilRef}></Form.Control>
+                  </Form.Group>
+                  <Button variant="primary" type="submit">Issue</Button>
                 </Form>
               </Container>
             </Card.Body>

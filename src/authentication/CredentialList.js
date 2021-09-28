@@ -42,41 +42,30 @@ function CredentialList() {
             "connection_id": conn.cred_ex_record.connection_id,
             "presentation_request": {
                 "indy": {
-                    "name": "Proof of Education",
-                    "version": "1.0",
+                    "name": "Proof of Vaccination",
+                    "version": "0.0.2",
                     "requested_attributes": {
-                        "0_name_uuid": {
-                            "name": "name",
+                        "0_firstname_uuid": {
+                            "name": "firstname",
                             "restrictions": [
                                 {
                                     "cred_def_id": conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id
                                 }
                             ]
                         },
-                        "0_date_uuid": {
-                            "name": "date",
+                        "0_lastname_uuid": {
+                            "name": "lastname",
                             "restrictions": [
                                 {
                                     "cred_def_id": conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id
                                 }
                             ]
                         },
-                        "0_degree_uuid": {
-                            "name": "degree",
-                            "restrictions": [
-                                {
-                                    "cred_def_id": conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id
-                                }
-                            ]
-                        },
-                        "0_self_attested_thing_uuid": {
-                            "name": "self_attested_thing"
-                        }
                     },
                     "requested_predicates": {
                         "0_age_GE_uuid": {
                             "name": "age",
-                            "p_type": ">=",
+                            "p_type": "<=",
                             "p_value": 18,
                             "restrictions": [
                                 {
@@ -89,27 +78,6 @@ function CredentialList() {
             }
         }
     }
-
-    // const getVerificationStatus = (res) => {
-    //     let pres_ex_id = res.data.pres_ex_id;
-    //     // return axios
-    //     //     .get(`http://localhost:8021/present-proof-2.0/records/${pres_ex_id}`)
-    //     //     .then(handleResponse)
-    //     //     .catch(handleError);
-
-    //     //http://localhost:8021/present-proof-2.0/records
-
-    //     var xhttp = new XMLHttpRequest();
-    //     xhttp.onreadystatechange = function() {
-    //         if (this.readyState == 4 && this.status == 200) {
-    //         // Typical action to be performed when the document is ready:
-    //             console.log('what s',JSON.parse(xhttp.responseText))
-    //         }
-
-    //     };
-    //     xhttp.open("GET", `http://localhost:8021/present-proof-2.0/records/${pres_ex_id}`, true);
-    //     xhttp.send();
-    // }
 
 
     const handlePresentProof =  (conn) => {
@@ -138,7 +106,7 @@ function CredentialList() {
     const getDisplayString = (items)=>{
         let temp='';
         items.map((item)=>{
-            temp += `<p>${(item.name||'')}  ${item.value}</p>`;
+            temp += `<p>${(item.name||'')} : ${item.value}</p>`;
         })
         return temp;
     }
@@ -146,7 +114,7 @@ function CredentialList() {
     const getDisplayString2 = (items)=>{
         let temp='';
         items.map((item)=>{
-            temp += `${(item.name||'')}  ${item.value}`;
+            temp += `${(item.name||'')} : ${item.value}`;
         })
         return temp;
     }

@@ -13,21 +13,23 @@ const ProofRequest = (props) => {
   const clientReferenceRef = useRef()
   const commentsRef = useRef()
   const credentialDefRef = useRef()
-  const clientFullNameRef = useRef()
-  const ppIssueDateRef = useRef()
+  const ppFirstName = useRef()
+  const ppLastName = useRef()
   const ppVaccinationTypeRef = useRef()
   const clientAgeRef = useRef()
   const [refresh, setRefresh] = useState('');
   const [message, setMessage] = useState();
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
+  const ISSUER_PUBLIC_DID = 'RcJY6pShAK5YwZJ55V1cGY';
+  const SCHEMA_SEQ_NO =  "98979";
   
 
   //http://localhost:8021/connections?alias=Hello Alice 2
   useEffect(() => {
     connectionIdRef.current.value = connectionData.connection_id;
     clientReferenceRef.current.value = connectionData.alias;
-    credentialDefRef.current.value = '87AyScWhdSCvWFYBGGq2Xb:3:CL:96490:issuer.vacc.schema'
+    credentialDefRef.current.value = `${ISSUER_PUBLIC_DID}:3:CL:${SCHEMA_SEQ_NO}:issuer.vacc.schema2`
 
   }, [refresh]);
 
@@ -41,40 +43,28 @@ const ProofRequest = (props) => {
             "indy": {
                 "name": "Proof of Vaccination",
                 "version": "1.0",
-                "nonce": "12345",
                 "requested_attributes": {
-                    "0_name_uuid": {
-                        "name": "firtname",
+                    "0_firstname_uuid": {
+                        "name": "firstname",
                         "restrictions": [
                             {
                                 "cred_def_id": credentialDefRef.current.value
                             }
                         ]
                     },
-                    "0_date_uuid": {
+                    "0_lastname_uuid": {
                         "name": "lastname",
                         "restrictions": [
                             {
                                 "cred_def_id": credentialDefRef.current.value
                             }
                         ]
-                    },
-                    "0_degree_uuid": {
-                        "name": "vaccinations",
-                        "restrictions": [
-                            {
-                                "cred_def_id": credentialDefRef.current.value
-                            }
-                        ]
-                    },
-                    "0_self_attested_thing_uuid": {
-                        "name": "dateofbirth"
                     }
                 },
                 "requested_predicates": {
                     "0_age_GE_uuid": {
-                        "name": "vaccinations",
-                        "p_type": ">",
+                        "name": "age",
+                        "p_type": ">=",
                         "p_value": 30,
                         "restrictions": [
                             {
@@ -138,6 +128,14 @@ const handleSubmit =  (e) => {
                   <Form.Group id="clientMessage">
                     <Form.Label>Comments</Form.Label>
                     <Form.Control type="text" ref={commentsRef}></Form.Control>
+                  </Form.Group>                  
+                  <Form.Group id="clientMessage">
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control type="text" ref={ppFirstName}></Form.Control>
+                  </Form.Group>                  
+                  <Form.Group id="clientMessage">
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control type="text" ref={ppLastName}></Form.Control>
                   </Form.Group>                  
                   <Button variant="primary" type="submit">Presentation Request</Button>
                 </Form>

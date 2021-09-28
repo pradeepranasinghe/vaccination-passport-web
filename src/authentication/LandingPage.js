@@ -83,7 +83,7 @@ function LandingPage() {
     acceptRequest(connection_id).then((res2) => {
       setMessage('Client Request Accepted Successfully!')
     });
-    setRefresh({...1})
+    setRefresh({ ...1 })
   }
 
 
@@ -99,83 +99,83 @@ function LandingPage() {
               <Container className="invite-form">
 
                 <Tabs id="controlled-tab"
-      activeKey={key}
-      onSelect={(k) => setKey(k)} defaultActiveKey="home" id="uncontrolled-tab-example" className="mb-3">
-                  
+                  activeKey={key}
+                  onSelect={(k) => setKey(k)} defaultActiveKey="home" id="uncontrolled-tab-example" className="mb-3">
+
                   <Tab eventKey="home" title="Connect">
-                  <ol>
-                  <div>
-                    <h4>Passport issuer steps</h4>
+                    <ol>
+                      <div>
+                        <h4>Passport issuer steps</h4>
 
-                    <li>Send an invitation to the Client to establish a secure connection before issuing the passport. Eg: via Email</li>
-                    <span className="spacer"></span>
-                    {/* <button onClick={()=>{setKey('issue');}}>test</button> */}
-                  </div>
+                        <li>Send an invitation to the Client to establish a secure connection before issuing the passport. Eg: via Email</li>
+                        <span className="spacer"></span>
+                        {/* <button onClick={()=>{setKey('issue');}}>test</button> */}
+                      </div>
 
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group id="message">
-                      <Form.Label>Invitation message</Form.Label>
-                      <Form.Control type="text" ref={invitationRef} required></Form.Control>
-                    </Form.Group>
-                    <Button variant="primary" type="submit">Generate Connection</Button>
-                    <span className="spacer"></span>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                      <Form.Label>Secure Connection Details for Client</Form.Label>
-                      <Form.Control as="textarea" ref={connectionRef} rows={3} />
-                    </Form.Group>
-                  </Form>
-                  <div>
-                    <p>Copy this response and sent it to the client via Email or Text</p>
+                      <Form onSubmit={handleSubmit}>
+                        <Form.Group id="message">
+                          <Form.Label>Invitation message</Form.Label>
+                          <Form.Control type="text" ref={invitationRef} required></Form.Control>
+                        </Form.Group>
+                        <Button variant="primary" type="submit">Generate Connection</Button>
+                        <span className="spacer"></span>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                          <Form.Label>Secure Connection Details for Client</Form.Label>
+                          <Form.Control as="textarea" ref={connectionRef} rows={3} />
+                        </Form.Group>
+                      </Form>
+                      <div>
+                        <p>Copy this response and sent it to the client via Email or Text</p>
 
-                    <li>Click <b>Accpet</b> button from the table to establish a secure connection with the Client</li>
+                        <li>Click <b>Accpet</b> button from the table to establish a secure connection with the Client</li>
 
-                  </div>
-                </ol>
-                {error && <Alert variant="danger">{error}</Alert>}
-              {message && <Alert variant="success">{message}</Alert>}
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Connection ID</th>
-                    <th>Message Sent</th>
-                    <th>Client</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {connections && connections.length > 0 ?
-                    connections.map((conn) => (
-                      <tr>
-                        <td>{conn.connection_id}</td>
-                        <td>{conn.alias}</td>
-                        <td>{conn.their_label}</td>
-                        <td>{conn.rfc23_state}</td>
-                        <td>{
-                          (conn.rfc23_state && conn.rfc23_state == 'request-received') &&
-                          <Button variant="primary" onClick={() => { handleAcceptRequest(conn.connection_id) }} type="button">Accpet</Button>}
-                          {(conn.rfc23_state && conn.rfc23_state == 'completed') &&
-                            <Button variant="primary" onClick={() => { handleClickIssue(conn) }} type="button">Issue</Button>}
-                        </td>
-                      </tr>
+                      </div>
+                    </ol>
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    {message && <Alert variant="success">{message}</Alert>}
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Connection ID</th>
+                          <th>Message Sent</th>
+                          <th>Client</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {connections && connections.length > 0 ?
+                          connections.map((conn) => (
+                            <tr>
+                              <td>{conn.connection_id}</td>
+                              <td>{conn.alias}</td>
+                              <td>{conn.their_label}</td>
+                              <td>{conn.rfc23_state}</td>
+                              <td>{
+                                (conn.rfc23_state && conn.rfc23_state == 'request-received') &&
+                                <Button variant="primary" onClick={() => { handleAcceptRequest(conn.connection_id) }} type="button">Accpet</Button>}
+                                {(conn.rfc23_state && conn.rfc23_state == 'completed') &&
+                                  <Button variant="primary" onClick={() => { handleClickIssue(conn) }} type="button">Issue</Button>}
+                              </td>
+                            </tr>
 
-                    )) : ''}
-                </tbody>
-              </Table>
+                          )) : ''}
+                      </tbody>
+                    </Table>
                   </Tab>
                   <Tab eventKey="issue" title="Issued Passports">
-                      <CredentialList/>
+                    <CredentialList />
                   </Tab>
                   <Tab eventKey="proofs" title="Issued Proof Requests">
-                      <ProofRequestList isIssuer={true}/>
+                    <ProofRequestList isIssuer={true} />
                   </Tab>
                   <Tab eventKey="creddef" title="Public Data">
-                      <PublicData/>
+                    <PublicData />
                   </Tab>
                 </Tabs>
-                
+
               </Container>
-              
+
 
             </Card.Body>
           </Card>

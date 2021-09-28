@@ -2,6 +2,11 @@
 
 Generally, Health records are kept in disparate but centralised database systems. These systems are vulnerable to data theft, cyber-attacks, fraud, blackmailing, and many other privacy issues. In addition to that, users of these systems need to maintain multiple user accounts and they don’t have any control over their data stored in these systems. In this paper, we will evaluate the usability of blockchain technologies for vendor-neutral decentralised identity management, access controls, and costs effective platforms to build a portable, user-centred tamper-proof vaccination passport that can be accessed from anywhere in the world.
 
+Notes:
+
+Adds --auto-store-credential to the demo Alice agents
+
+
 ## This is a Web Application Artefact developed to orchestrate Passport Issuer, Holder, and Verifier credential exchange scenarios
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -18,57 +23,103 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn test`
+## Starting Agents:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1) Checkout GITHUB project:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+https://github.com/hyperledger/aries-cloudagent-python.git
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2) cd demo
 
-### `yarn eject`
+3) Start Faber, Alice , Acme in seperate Tabs 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+4) start agents in seperate tabs
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+tab1) LEDGER_URL=http://dev.greenlight.bcovrin.vonx.io ./run_demo faber --events --no-auto --bg
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+tab2) LEDGER_URL=http://dev.greenlight.bcovrin.vonx.io ./run_demo faber --events --no-auto --bg
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+tab3 ) LEDGER_URL=http://dev.greenlight.bcovrin.vonx.io ./run_demo faber --events --no-auto --bg
 
-## Learn More
+5) check logs in each tab: 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+tab1) docker logs faber
+tab2) docker logs alice
+tab3) docker logs acme
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+6) open swaggers: 
 
-### Code Splitting
+faber
+http://localhost:8021/api/doc
+alice
+http://localhost:8031/api/doc
+acme
+http://localhost:8041/api/doc
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+7) create schema and credentials
 
-### Analyzing the Bundle Size
+## create schema
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+POST: http://localhost:8021/schemas
+req: 
 
-### Making a Progressive Web App
+{
+  "attributes": [
+    "firstname","middlename","lastname","age","validfrom", "validuntil", "vaccinations"
+  ],
+  "schema_name": "vacc-pass-t2",
+  "schema_version": "0.0.2"
+}
+res: 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+{
+  "schema_id": "RcJY6pShAK5YwZJ55V1cGY:2:vacc-pass-t2:0.0.2",
+  "schema": {
+    "ver": "1.0",
+    "id": "RcJY6pShAK5YwZJ55V1cGY:2:vacc-pass-t2:0.0.2",
+    "name": "vacc-pass-t2",
+    "version": "0.0.2",
+    "attrNames": [
+      "middlename",
+      "validuntil",
+      "vaccinations",
+      "firstname",
+      "age",
+      "lastname",
+      "validfrom"
+    ],
+    "seqNo": 98979
+  }
+}
 
-### Advanced Configuration
+## create credential defintion 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+POST: http://localhost:8021/credential-definitions
 
-### Deployment
+based on the response from the previous step: 
+req: 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+{
+  "revocation_registry_size": 1000,
+  "schema_id": "RcJY6pShAK5YwZJ55V1cGY:2:vacc-pass-t2:0.0.2",
+  "support_revocation": false,
+  "tag": "issuer.vacc.schema2"
+}
 
-### `yarn build` fails to minify
+res:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+{
+  "credential_definition_id": "RcJY6pShAK5YwZJ55V1cGY:3:CL:98979:issuer.vacc.schema2"
+}
+
+## Shutdown Agents
+
+docker stop faber
+docker stop alice
+docker stop acme
+
+
+
+
