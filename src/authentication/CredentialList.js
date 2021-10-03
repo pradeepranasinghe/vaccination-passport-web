@@ -62,17 +62,18 @@ function CredentialList() {
                             ]
                         },
                     },
-                    "requested_predicates": {
-                        "0_age_GE_uuid": {
-                            "name": "age",
-                            "p_type": "<=",
-                            "p_value": 18,
-                            "restrictions": [
-                                {
-                                    "cred_def_id": conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id
-                                }
-                            ]
-                        }
+                    "requested_predicates": 
+                    {
+                        // "0_age_GE_uuid": {
+                        //     "name": "age",
+                        //     "p_type": "<=",
+                        //     "p_value": 18,
+                        //     "restrictions": [
+                        //         {
+                        //             "cred_def_id": conn.cred_ex_record.by_format.cred_offer.indy.cred_def_id
+                        //         }
+                        //     ]
+                        // }
                     }
                 }
             }
